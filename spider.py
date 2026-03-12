@@ -1,17 +1,31 @@
+import requests
 import json
 
-articles = [
-    {
-        "title": "TED - AI will change the world",
-        "mediaid": "10876787-d8a1-11ef-8139-d49a0f46aa09"
-    },
-    {
-        "title": "TED - Future of Technology",
-        "mediaid": "3321779d-a503-11ef-8139-d49a0f46aa09"
-    }
-]
+url = "https://static.eudic.net/MediaPool/index.json"
 
-with open("articles.json", "w") as f:
-    json.dump(articles, f, indent=2)
+headers = {
+    "User-Agent": "Mozilla/5.0"
+}
 
-print("articles.json generated")
+try:
+    r = requests.get(url, headers=headers)
+    data = r.json()
+
+    articles = []
+
+    for item in data[:100]:
+        title = item.get("title","")
+        mediaid = item.get("id","")
+
+        articles.append({
+            "title": title,
+            "mediaid": mediaid
+        })
+
+    with open("articles.json","w") as f:
+        json.dump(articles,f,indent=2)
+
+    print("抓取完成:",len(articles))
+
+except Exception as e:
+    print("错误:",e)
