@@ -1,0 +1,17 @@
+import json
+
+articles = [
+    {
+        "title": "TED - AI will change the world",
+        "mediaid": "10876787-d8a1-11ef-8139-d49a0f46aa09"
+    },
+    {
+        "title": "TED - Future of Technology",
+        "mediaid": "3321779d-a503-11ef-8139-d49a0f46aa09"
+    }
+]
+
+with open("articles.json", "w") as f:
+    json.dump(articles, f, indent=2)
+
+print("articles.json generated")
