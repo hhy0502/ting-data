@@ -1,31 +1,50 @@
 import requests
 import json
+import os
 
-url = "https://static.eudic.net/MediaPool/index.json"
+API = "https://static.eudic.net/MediaPool/index.json"
 
 headers = {
-    "User-Agent": "Mozilla/5.0"
+    "User-Agent":"Mozilla/5.0"
 }
 
-try:
-    r = requests.get(url, headers=headers)
+def fetch_articles():
+
+    r = requests.get(API,headers=headers)
     data = r.json()
 
-    articles = []
+    result = []
 
-    for item in data[:100]:
+    for item in data[:500]:
+
         title = item.get("title","")
         mediaid = item.get("id","")
 
-        articles.append({
-            "title": title,
-            "mediaid": mediaid
+        if not mediaid:
+            continue
+
+        result.append({
+            "title":title,
+            "mediaid":mediaid
         })
 
+    return result
+
+
+def save_articles(data):
+
     with open("articles.json","w") as f:
-        json.dump(articles,f,indent=2)
+        json.dump(data,f,indent=2)
 
-    print("抓取完成:",len(articles))
 
-except Exception as e:
-    print("错误:",e)
+def main():
+
+    articles = fetch_articles()
+
+    save_articles(articles)
+
+    print("更新文章:",len(articles))
+
+
+if __name__ == "__main__":
+    main()
